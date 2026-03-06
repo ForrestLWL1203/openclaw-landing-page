@@ -4,165 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpenClaw - 你的AI助手 🦞</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      /* Modern Dark Mode - SuperDesign */
+      --bg: oklch(0.145 0.015 285);
+      --bg-subtle: oklch(0.18 0.015 285);
+      --bg-elevated: oklch(0.22 0.015 285);
+      --text: oklch(0.92 0 0);
+      --text-muted: oklch(0.7 0 0);
+      --primary: oklch(0.75 0.18 20);
+      --primary-hover: oklch(0.85 0.18 20);
+      --accent: oklch(0.7 0.22 170);
+      --border: oklch(0.3 0 0);
+      --radius: 0.75rem;
+      --shadow: 0 4px 24px -4px oklch(0 0 0 / 0.4);
+      --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
-      font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      color: #fff;
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
     }
 
-    /* 场景通用 */
-    section {
-      padding: 80px 20px 40px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* 场景1: 闪亮登场 */
-    .scene1 {
-      min-height: auto;
-      padding: 100px 20px 30px;
-      text-align: center;
-    }
-
-    .crawfish-container {
-      margin-bottom: 15px;
-    }
-
-    .crawfish {
-      width: 150px;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .scene1 h1 {
-      font-size: 2rem;
-      color: #ff6b6b;
-      text-shadow: 2px 2px 0px #4ecdc4;
-    }
-
-    /* 场景2: 安装教程 */
-    .scene2 {
-      background: linear-gradient(180deg, #1a1a2e 0%, #0f0f23 100%);
-    }
-
-    .scene2 h2 {
-      font-size: 1.6rem;
-      color: #4ecdc4;
-      margin-bottom: 25px;
-    }
-
-    .terminal {
-      background: #1e1e1e;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 700px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-      overflow: hidden;
-    }
-
-    .terminal-header {
-      background: #323233;
-      padding: 10px 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .terminal-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-
-    .terminal-dot.red { background: #ff5f56; }
-    .terminal-dot.yellow { background: #ffbd2e; }
-    .terminal-dot.green { background: #27c93f; }
-
-    .terminal-title {
-      color: #aaa;
-      font-size: 13px;
-      margin-left: 20px;
-      font-family: monospace;
-    }
-
-    .terminal-body {
-      padding: 18px;
-      font-family: 'Consolas', 'Monaco', monospace;
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .cmd-comment { color: #4ecdc4; }
-    .cmd-command { color: #fff; }
-    .cmd-desc { color: #666; margin-top: 10px; }
-
-    /* 场景3: 核心功能 */
-    .scene3 {
-      background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 100%);
-    }
-
-    .scene3 h2 {
-      font-size: 1.8rem;
-      color: #4ecdc4;
-      margin-bottom: 25px;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
-      max-width: 850px;
-      width: 100%;
-    }
-
-    .feature-card {
-      background: rgba(255,255,255,0.05);
-      border-radius: 12px;
-      padding: 18px;
-      text-align: center;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255,255,255,0.1);
-    }
-
-    .feature-icon {
-      font-size: 36px;
-      margin-bottom: 10px;
-    }
-
-    .feature-title {
-      font-size: 1rem;
-      font-weight: bold;
-      margin-bottom: 6px;
-      color: #fff;
-    }
-
-    .feature-desc {
-      color: #aaa;
-      font-size: 0.8rem;
-      line-height: 1.3;
-    }
-
-    /* 结束 */
-    .footer {
-      text-align: center;
-      padding: 30px 20px;
-      background: #0f0f23;
-      color: #ff6b6b;
-      font-size: 1.2rem;
+    /* Glassmorphism */
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     /* 导航 */
@@ -171,51 +46,244 @@
       top: 0;
       left: 0;
       right: 0;
-      padding: 12px 25px;
-      background: rgba(26, 26, 46, 0.95);
-      backdrop-filter: blur(10px);
       z-index: 100;
+      padding: 1rem 2rem;
+      background: rgba(20, 20, 25, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .logo {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #ff6b6b;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .nav-links {
       display: flex;
-      gap: 20px;
+      gap: 2rem;
     }
 
     .nav-links a {
-      color: #fff;
+      color: var(--text-muted);
       text-decoration: none;
-      transition: color 0.3s;
       font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
     }
 
     .nav-links a:hover {
-      color: #4ecdc4;
+      color: var(--text);
+    }
+
+    /* Hero 区域 */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 背景装饰 */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 30% 20%, rgba(120, 80, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(255, 100, 150, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(80, 200, 200, 0.08) 0%, transparent 40%);
+      animation: bgFloat 20s ease-in-out infinite;
+    }
+
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-2%, -2%); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .crawfish-container {
+      margin-bottom: 2rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .crawfish {
+      width: 180px;
+      filter: drop-shadow(0 20px 40px rgba(255, 100, 150, 0.3));
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, #ff8fa3 50%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 500px;
+      margin: 0 auto;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    /* 安装区域 */
+    .install-section {
+      padding: 5rem 2rem;
+      background: var(--bg-subtle);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      color: var(--text);
+    }
+
+    .terminal {
+      max-width: 700px;
+      margin: 0 auto;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      animation: fadeInUp 0.6s ease-out 0.4s both;
+    }
+
+    .terminal-header {
+      padding: 0.75rem 1rem;
+      background: var(--bg-elevated);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      background: var(--bg);
+    }
+
+    .cmd-comment { color: var(--accent); }
+    .cmd-command { color: var(--text); }
+    .cmd-desc { color: var(--text-muted); margin-top: 0.75rem; }
+
+    /* 功能区域 */
+    .features-section {
+      padding: 5rem 2rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      padding: 1.75rem;
+      border-radius: var(--radius);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+      box-shadow: 0 12px 40px -8px rgba(255, 100, 150, 0.2);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      background: var(--bg-subtle);
+      border-top: 1px solid var(--border);
+    }
+
+    footer p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    footer span {
+      color: var(--primary);
     }
 
     /* 响应式 */
     @media (max-width: 768px) {
-      .scene1 h1 { font-size: 1.8rem; }
-      .crawfish { width: 150px; }
-      .terminal-body { font-size: 12px; }
-      .features { grid-template-columns: 1fr 1fr; gap: 12px; }
-      .feature-card { padding: 12px; }
-      .feature-icon { font-size: 28px; }
+      .hero h1 { font-size: 2.25rem; }
+      .hero p { font-size: 1rem; }
+      .crawfish { width: 140px; }
+      .nav-links { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <nav>
-    <div class="logo">🦞 OpenClaw</div>
+    <a href="#" class="logo">🦞 OpenClaw</a>
     <div class="nav-links">
       <a href="#intro">首页</a>
       <a href="#install">安装</a>
@@ -223,41 +291,43 @@
     </div>
   </nav>
 
-  <!-- 场景1: 闪亮登场 -->
-  <section class="scene1" id="intro">
-    <div class="crawfish-container">
-      <img class="crawfish" src="crawfish.png" alt="小龙虾">
+  <!-- Hero -->
+  <section class="hero" id="intro">
+    <div class="hero-content">
+      <div class="crawfish-container">
+        <img class="crawfish" src="crawfish.png" alt="小龙虾">
+      </div>
+      <h1>小龙虾闪亮登场！</h1>
+      <p>你的智能 AI 助手 · 多平台支持 · 无限可能</p>
     </div>
-    <h1>🦞 小龙虾闪亮登场！🦞</h1>
   </section>
 
-  <!-- 场景2: 安装教程 -->
-  <section class="scene2" id="install">
-    <h2>📥 快速安装</h2>
-    <div class="terminal">
+  <!-- 安装 -->
+  <section class="install-section" id="install">
+    <h2 class="section-title">📥 快速安装</h2>
+    <div class="terminal glass">
       <div class="terminal-header">
-        <div class="terminal-dot red"></div>
-        <div class="terminal-dot yellow"></div>
-        <div class="terminal-dot green"></div>
-        <span class="terminal-title">Terminal</span>
+        <div class="terminal-dot" style="background: #ff5f56;"></div>
+        <div class="terminal-dot" style="background: #ffbd2e;"></div>
+        <div class="terminal-dot" style="background: #27c93f;"></div>
       </div>
       <div class="terminal-body">
-        <div class="cmd-comment"># 1. 安装 CLI</div>
+        <div class="cmd-comment"># 安装 CLI</div>
         <div class="cmd-command">npm install -g openclaw</div>
         
-        <div class="cmd-desc"># 2. 初始化 Gateway</div>
+        <div class="cmd-desc"># 初始化 Gateway</div>
         <div class="cmd-command">openclaw gateway init</div>
         
-        <div class="cmd-desc"># 3. 启动服务</div>
+        <div class="cmd-desc"># 启动服务</div>
         <div class="cmd-command">openclaw gateway start</div>
       </div>
     </div>
   </section>
 
-  <!-- 场景3: 核心功能 -->
-  <section class="scene3" id="features">
-    <h2>✨ 核心功能</h2>
-    <div class="features">
+  <!-- 功能 -->
+  <section class="features-section" id="features">
+    <h2 class="section-title">✨ 核心功能</h2>
+    <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">🤖</div>
         <div class="feature-title">AI Agent</div>
@@ -286,27 +356,8 @@
     </div>
   </section>
 
-  <footer class="footer">
-    🦞 OpenClaw - 你的AI助手 🦞
+  <footer>
+    <p><span>🦞</span> OpenClaw - 你的AI助手</p>
   </footer>
-
-  <script>
-    // 滚动动画
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.feature-card').forEach((card, i) => {
-      card.style.opacity = '0';
-      card.style.transform = 'translateY(15px)';
-      card.style.transition = `all 0.3s ease ${i * 0.06}s`;
-      observer.observe(card);
-    });
-  </script>
 </body>
 </html>
