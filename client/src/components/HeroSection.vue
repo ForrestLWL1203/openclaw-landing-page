@@ -28,24 +28,17 @@ onMounted(() => {
       <h1>
         <span class="gradient-text">OpenClaw</span>
       </h1>
-      <p class="hero-subtitle">你的智能 AI 助手 · 多平台支持 · 无限可能</p>
+      <p class="hero-subtitle">
+        开源的 AI 助手框架 · 多平台接入 · 无限可能
+      </p>
+      <p class="hero-desc">
+        连接你的 Telegram、Discord、微信等平台<br>
+        用 Skills 扩展功能，多 Agent 协同工作<br>
+        完全本地部署，隐私安全有保障
+      </p>
       <div class="hero-cta">
-        <a href="#install" class="btn btn-primary">快速开始</a>
+        <a href="#install" class="btn btn-primary">🚀 快速开始</a>
         <a href="#features" class="btn btn-secondary">了解更多</a>
-      </div>
-      <div class="hero-stats">
-        <div class="stat">
-          <span class="stat-value gradient-text">10+</span>
-          <span class="stat-label">平台支持</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value gradient-text">∞</span>
-          <span class="stat-label">可能无限</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value gradient-text">100%</span>
-          <span class="stat-label">本地部署</span>
-        </div>
       </div>
     </div>
     <div class="scroll-indicator">
@@ -125,18 +118,25 @@ onMounted(() => {
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
-  color: var(--text-muted);
-  max-width: 500px;
-  margin: 0 auto 2.5rem;
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 1.5rem;
   animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.hero-desc {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
 .hero-cta {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  margin-bottom: 3rem;
   animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
@@ -174,30 +174,6 @@ onMounted(() => {
   border-color: var(--primary);
 }
 
-.hero-stats {
-  display: flex;
-  gap: 3rem;
-  justify-content: center;
-  animation: fadeInUp 0.8s ease-out 0.6s both;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.stat-value {
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.stat-label {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
-}
-
 .scroll-indicator {
   position: absolute;
   bottom: 2rem;
@@ -228,17 +204,13 @@ onMounted(() => {
     font-size: 80px;
   }
   
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
   .hero-cta {
     flex-direction: column;
     align-items: center;
-  }
-  
-  .hero-stats {
-    gap: 1.5rem;
-  }
-  
-  .stat-value {
-    font-size: 1.5rem;
   }
 }
 </style>

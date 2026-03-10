@@ -1,37 +1,23 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 
 const isDropdownOpen = ref(false)
-const isScrolled = ref(false)
-
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 50
-}
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
 
 const navItems = [
   { label: '首页', href: '#intro' },
-  { label: '特色功能', href: '#features' },
-  { label: '使用场景', href: '#usecases' },
-  { label: '快速开始', href: '#install' },
+  { label: '安装', href: '#install' },
+  { label: '功能', href: '#features' },
 ]
 
 const dropdownItems = [
+  { label: '功能特性', href: '#features' },
   { label: '文档', href: '#' },
-  { label: 'GitHub', href: 'https://github.com', target: '_blank' },
-  { label: '关于团队', href: '#team' },
+  { label: '关于我们', href: '#' },
 ]
 </script>
 
 <template>
-  <nav class="navbar" :class="{ scrolled: isScrolled }">
+  <nav class="navbar">
     <div class="nav-container">
       <a href="#" class="logo">
         🦞 OpenClaw
@@ -60,7 +46,6 @@ const dropdownItems = [
               v-for="item in dropdownItems" 
               :key="item.label"
               :href="item.href"
-              :target="item.target"
             >
               {{ item.label }}
             </a>
@@ -79,17 +64,9 @@ const dropdownItems = [
   right: 0;
   z-index: 100;
   padding: 1rem 2rem;
-  background: rgba(10, 10, 15, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid transparent;
-  transition: all 0.3s ease;
-}
-
-.navbar.scrolled {
-  padding: 0.75rem 2rem;
-  background: rgba(10, 10, 15, 0.9);
-  border-bottom-color: var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .nav-container {
@@ -103,24 +80,16 @@ const dropdownItems = [
 .logo {
   font-size: 1.25rem;
   font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--primary);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: transform 0.3s ease;
-}
-
-.logo:hover {
-  transform: scale(1.05);
 }
 
 .nav-links {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 
 .nav-link {
@@ -129,30 +98,11 @@ const dropdownItems = [
   font-size: 0.9rem;
   font-weight: 500;
   padding: 0.5rem 1rem;
-  border-radius: var(--radius);
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0.25rem;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: var(--gradient-primary);
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-  border-radius: 1px;
+  transition: color 0.2s;
 }
 
 .nav-link:hover {
   color: var(--text);
-}
-
-.nav-link:hover::after {
-  width: calc(100% - 2rem);
 }
 
 .dropdown {
@@ -169,12 +119,10 @@ const dropdownItems = [
   cursor: pointer;
   transition: color 0.2s;
   font-family: var(--font-sans);
-  border-radius: var(--radius);
 }
 
 .dropbtn:hover {
   color: var(--text);
-  background: var(--bg-subtle);
 }
 
 .dropdown-content {
@@ -188,7 +136,6 @@ const dropdownItems = [
   box-shadow: var(--shadow);
   z-index: 200;
   overflow: hidden;
-  animation: fadeIn 0.2s ease;
 }
 
 .dropdown-content.open {
@@ -201,13 +148,12 @@ const dropdownItems = [
   color: var(--text);
   text-decoration: none;
   font-size: 0.875rem;
-  transition: all 0.2s ease;
+  transition: background 0.2s, color 0.2s;
 }
 
 .dropdown-content a:hover {
   background: var(--bg-subtle);
   color: var(--primary);
-  padding-left: 1.25rem;
 }
 
 @media (max-width: 768px) {
