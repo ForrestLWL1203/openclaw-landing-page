@@ -130,6 +130,8 @@ const copyCommand = (cmd: string) => {
             </div>
         </div>
       </div>
+      <!-- 隐藏占位符 - 展开时保持第4步在第一行 -->
+      <div v-if="expandedStep !== null" class="step-placeholder"></div>
     </div>
   </section>
 </template>
@@ -174,8 +176,8 @@ const copyCommand = (cmd: string) => {
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
   padding: 1rem 0.5rem;
 }
 
@@ -189,6 +191,11 @@ const copyCommand = (cmd: string) => {
 
 .step-wrapper.is-collapsed {
   opacity: 0.5;
+}
+
+/* 隐藏的占位列 */
+.step-placeholder {
+  visibility: hidden;
 }
 
 .step-card {
