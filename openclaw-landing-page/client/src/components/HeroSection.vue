@@ -17,7 +17,7 @@
 <style scoped>
 .hero {
   min-height: auto;
-  padding: 100px 2rem 3rem;
+  padding: 60px 2rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
