@@ -171,12 +171,12 @@ const copyCommand = (cmd: string) => {
 }
 
 .steps-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  padding: 1rem 0;
+  gap: 0.75rem;
+  padding: 1rem 0.5rem;
 }
 
 .step-wrapper {
@@ -188,7 +188,7 @@ const copyCommand = (cmd: string) => {
 }
 
 .step-wrapper.is-collapsed {
-  opacity: 0.4;
+  opacity: 0.5;
 }
 
 .step-card {
