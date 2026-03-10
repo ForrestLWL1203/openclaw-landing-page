@@ -1,6 +1,22 @@
+title: OpenClaw Landing Page
+description: OpenClaw 介绍页面
+
 exclude:
   - node_modules
   - client/node_modules
-  - client/package.json
-  - client/package-lock.json
-  - ".gitignore"
+  - server
+  - skills
+  - openclaw-docs-temp
+  - .clawhub
+  - .openclaw
+  - client
+  - "*.py"
+  - AGENTS.md
+  - SOUL.md
+  - TOOLS.md
+  - USER.md
+  - BOOTSTRAP.md
+  - HEARTBEAT.md
+  - IDENTITY.md
+  - package.json
+  - package-lock.json
