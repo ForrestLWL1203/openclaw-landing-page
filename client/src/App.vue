@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import NavBar from './components/NavBar.vue'
 import HeroSection from './components/HeroSection.vue'
+import InstallSection from './components/InstallSection.vue'
 import FeaturesSection from './components/FeaturesSection.vue'
 import UseCasesSection from './components/UseCasesSection.vue'
-import InstallSection from './components/InstallSection.vue'
-import FooterSection from './components/FooterSection.vue'
 </script>
 
 <template>
@@ -16,7 +15,6 @@ import FooterSection from './components/FooterSection.vue'
       <FeaturesSection />
       <UseCasesSection />
     </main>
-    <FooterSection />
   </div>
 </template>
 
