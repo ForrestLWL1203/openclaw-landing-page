@@ -107,8 +107,7 @@ const copyCommand = (cmd: string) => {
           </div>
           
           <!-- 展开详情 -->
-          <Transition name="slide">
-            <div v-if="expandedStep === step.id" class="step-details" @click.stop>
+          <div v-show="expandedStep === step.id" class="step-details" @click.stop>
               <div class="command-block" @click="copyCommand(step.command)">
                 <code>{{ step.command }}</code>
                 <span class="copy-hint">点击复制</span>
@@ -129,7 +128,6 @@ const copyCommand = (cmd: string) => {
                 查看官方文档 →
               </a>
             </div>
-          </Transition>
         </div>
       </div>
     </div>
