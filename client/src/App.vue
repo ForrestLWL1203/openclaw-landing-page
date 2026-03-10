@@ -12,9 +12,9 @@ import FooterSection from './components/FooterSection.vue'
     <NavBar />
     <main>
       <HeroSection />
+      <InstallSection />
       <FeaturesSection />
       <UseCasesSection />
-      <InstallSection />
     </main>
     <FooterSection />
   </div>
