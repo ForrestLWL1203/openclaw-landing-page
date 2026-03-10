@@ -173,21 +173,28 @@ const copyCommand = (cmd: string) => {
 }
 
 .steps-container {
-  max-width: 1000px;
+  max-width: 1400px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
 }
 
 .step-wrapper {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.step-wrapper.is-active {
+  flex: 1.5;
+  min-width: 350px;
 }
 
 .step-wrapper.is-collapsed {
-  opacity: 0.5;
-  transform: scale(0.95);
-  pointer-events: none;
+  opacity: 0.4;
+  flex: 0.5;
+  min-width: 120px;
 }
 
 .step-card {
