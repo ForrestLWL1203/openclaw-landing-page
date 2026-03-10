@@ -3,6 +3,7 @@ import NavBar from './components/NavBar.vue'
 import HeroSection from './components/HeroSection.vue'
 import InstallSection from './components/InstallSection.vue'
 import FeaturesSection from './components/FeaturesSection.vue'
+import SkillsSection from './components/SkillsSection.vue'
 import UseCasesSection from './components/UseCasesSection.vue'
 </script>
 
@@ -12,6 +13,7 @@ import UseCasesSection from './components/UseCasesSection.vue'
     <main>
       <HeroSection />
       <InstallSection />
+      <SkillsSection />
       <FeaturesSection />
       <UseCasesSection />
     </main>
