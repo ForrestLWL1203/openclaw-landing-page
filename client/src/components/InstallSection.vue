@@ -127,10 +127,10 @@ const copyCommand = (cmd: string) => {
 
 <style scoped>
 .install-section {
-  padding: 6rem 2rem;
+  padding: 8rem 2rem 12rem;
   background: var(--bg-subtle);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .install-section::before {
