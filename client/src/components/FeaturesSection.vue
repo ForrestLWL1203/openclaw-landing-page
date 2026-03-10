@@ -124,10 +124,6 @@ const features: Feature[] = [
         </div>
       </div>
     </div>
-    
-    <div class="feature-cta reveal">
-      <a href="#install" class="btn btn-primary">开始使用 →</a>
-    </div>
   </section>
 </template>
 
