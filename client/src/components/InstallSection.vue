@@ -343,25 +343,25 @@ const copyCommand = (cmd: string) => {
   transform: translateX(3px);
 }
 
-/* 展开动画 */
+/* 展开动画 - 横向 */
 .slide-enter-active,
 .slide-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
 .slide-enter-from,
 .slide-leave-to {
   opacity: 0;
-  max-height: 0;
-  transform: translateY(-10px);
+  max-width: 0;
+  transform: translateX(50px);
 }
 
 .slide-enter-to,
 .slide-leave-from {
   opacity: 1;
-  max-height: 400px;
-  transform: translateY(0);
+  max-width: 500px;
+  transform: translateX(0);
 }
 
 @media (max-width: 900px) {
