@@ -177,21 +177,25 @@ const copyCommand = (cmd: string) => {
   gap: 1rem;
   padding: 1rem 0;
   align-items: stretch;
+  justify-content: center;
 }
 
 .step-wrapper {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   flex: 1;
   display: flex;
+  max-width: 280px;
 }
 
 .step-wrapper.is-active {
   flex: 2;
+  max-width: 600px;
 }
 
 .step-wrapper.is-collapsed {
   opacity: 0.4;
-  flex: 0.6;
+  flex: 0.7;
+  max-width: 180px;
 }
 
 .step-card {
