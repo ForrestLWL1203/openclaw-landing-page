@@ -1,18 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
-const isDropdownOpen = ref(false)
-
 const navItems = [
   { label: '首页', href: '#intro' },
-  { label: '安装', href: '#install' },
   { label: '功能', href: '#features' },
-]
-
-const dropdownItems = [
-  { label: '功能特性', href: '#features' },
-  { label: '文档', href: '#' },
-  { label: '关于我们', href: '#' },
+  { label: '安装', href: '#install' },
 ]
 </script>
 
@@ -32,25 +22,6 @@ const dropdownItems = [
         >
           {{ item.label }}
         </a>
-        
-        <div 
-          class="dropdown"
-          @mouseenter="isDropdownOpen = true"
-          @mouseleave="isDropdownOpen = false"
-        >
-          <button class="dropbtn">
-            更多 ▾
-          </button>
-          <div class="dropdown-content" :class="{ open: isDropdownOpen }">
-            <a 
-              v-for="item in dropdownItems" 
-              :key="item.label"
-              :href="item.href"
-            >
-              {{ item.label }}
-            </a>
-          </div>
-        </div>
       </div>
     </div>
   </nav>
@@ -64,9 +35,22 @@ const dropdownItems = [
   right: 0;
   z-index: 100;
   padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(10, 10, 15, 0.85);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .nav-container {
@@ -80,11 +64,17 @@ const dropdownItems = [
 .logo {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--text);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.logo:hover {
+  color: var(--primary);
+  transform: scale(1.05);
 }
 
 .nav-links {
@@ -97,63 +87,32 @@ const dropdownItems = [
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  transition: color 0.2s;
+  padding: 0.5rem 1.25rem;
+  border-radius: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
 }
 
 .nav-link:hover {
   color: var(--text);
+  background: rgba(99, 102, 241, 0.1);
 }
 
-.dropdown {
-  position: relative;
-}
-
-.dropbtn {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: color 0.2s;
-  font-family: var(--font-sans);
-}
-
-.dropbtn:hover {
-  color: var(--text);
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  min-width: 160px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  z-index: 200;
-  overflow: hidden;
-}
-
-.dropdown-content.open {
-  display: block;
-}
-
-.dropdown-content a {
-  display: block;
-  padding: 0.75rem 1rem;
-  color: var(--text);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: background 0.2s, color 0.2s;
-}
-
-.dropdown-content a:hover {
-  background: var(--bg-subtle);
-  color: var(--primary);
+.nav-link:hover::before {
+  width: 60%;
 }
 
 @media (max-width: 768px) {
