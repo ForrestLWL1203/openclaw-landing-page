@@ -16,13 +16,13 @@
 
 <style scoped>
 .hero {
-  min-height: 100vh;
+  min-height: auto;
+  padding: 100px 2rem 3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 80px 2rem 2rem;
   position: relative;
   overflow: hidden;
   background: var(--bg-subtle);

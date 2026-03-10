@@ -11,8 +11,8 @@ import FooterSection from './components/FooterSection.vue'
     <NavBar />
     <main>
       <HeroSection />
-      <FeaturesSection />
       <InstallSection />
+      <FeaturesSection />
     </main>
     <FooterSection />
   </div>
