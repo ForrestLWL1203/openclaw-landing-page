@@ -1,175 +1,137 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
-const activeStep = ref(1)
+interface Step {
+  id: number
+  title: string
+  desc: string
+  command: string
+  details: string[]
+  link?: string
+}
 
-onMounted(() => {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible')
-        }
-      })
-    },
-    { threshold: 0.2 }
-  )
-  
-  document.querySelectorAll('.install-section .reveal').forEach((el) => {
-    observer.observe(el)
-  })
-})
-
-const steps = [
+const steps: Step[] = [
   {
-    number: 1,
-    title: '环境准备',
-    desc: '安装 Node.js 环境',
+    id: 1,
+    title: '安装 CLI',
+    desc: '全局安装 OpenClaw 命令行工具',
+    command: 'npm install -g openclaw@latest',
     details: [
-      '下载并安装 Node.js（推荐 18.x 或更高版本）',
-      'Windows 用户：访问 nodejs.org 下载安装包',
-      'Mac 用户：推荐使用 Homebrew 安装：brew install node',
-      'Linux 用户：使用包管理器安装，如 Ubuntu: sudo apt install nodejs npm'
-    ]
+      '前置要求：Node.js >= 18，推荐使用 Node.js 22+',
+      'Windows 用户推荐使用 WSL2（Ubuntu）运行',
+      'macOS/Linux 用户可直接安装',
+      '安装完成后验证：openclaw --version',
+    ],
+    link: 'https://docs.openclaw.ai/zh-CN/start/quickstart'
   },
   {
-    number: 2,
-    title: '安装 OpenClaw',
-    desc: '全局安装 CLI 工具',
+    id: 2,
+    title: '安装 Node.js',
+    desc: '安装 Node.js 环境（如果没有）',
+    command: 'node -v',
     details: [
-      '打开终端（Windows 用户使用 PowerShell 或 CMD）',
-      '运行安装命令：npm install -g openclaw',
-      '等待安装完成（约 1-2 分钟）',
-      '验证安装：运行 openclaw --version'
-    ]
+      '推荐使用 nvm 管理 Node.js 版本',
+      '运行 nvm install 22 安装 Node.js 22',
+      '运行 nvm use 22 切换版本',
+      '或从官网 https://nodejs.org 下载安装',
+    ],
+    link: 'https://nodejs.org/'
   },
   {
-    number: 3,
+    id: 3,
     title: '初始化 Gateway',
-    desc: '启动本地服务',
+    desc: '配置本地 Gateway 服务',
+    command: 'openclaw onboard --install-daemon',
     details: [
-      '初始化配置：openclaw gateway init',
-      '启动 Gateway 服务：openclaw gateway服务启动 start',
-      '成功后，浏览器访问 http://localhost:8080',
-      '按 Ctrl+C 可停止服务'
-    ]
+      '按提示选择认证方式（OAuth 或 API 密钥）',
+      '选择所需的渠道（WhatsApp/Telegram/Discord）',
+      '配置 Gateway 网关端口（默认 18789）',
+      '配置文件保存在 ~/.openclaw/',
+    ],
+    link: 'https://docs.openclaw.ai/zh-CN/start/wizard'
   },
   {
-    number: 4,
-    title: '连接平台',
-    desc: '绑定你的通讯渠道',
+    id: 4,
+    title: '配置 Agent',
+    desc: '配置 AI 助手连接',
+    command: 'openclaw gateway start',
     details: [
-      '在 Gateway 界面选择要连接的平台（Telegram/Discord/微信等）',
-      '按照指引获取 API 密钥',
-      '完成绑定即可开始使用',
-      '支持多平台同时在线'
-    ]
+      '启动 Gateway 网关服务',
+      '访问 http://127.0.0.1:18789/ 打开控制界面',
+      '在控制界面配置 AI 模型和 API 密钥',
+      '详细配置请参考官方文档',
+    ],
+    link: 'https://docs.openclaw.ai/zh-CN'
   }
 ]
+
+const expandedStep = ref<number | null>(null)
+
+const toggleStep = (id: number) => {
+  expandedStep.value = expandedStep.value === id ? null : id
+}
 
 const copyCommand = (cmd: string) => {
   navigator.clipboard.writeText(cmd)
 }
-
-const commands = [
-  { comment: '# 1. 安装 OpenClaw CLI', command: 'npm install -g openclaw' },
-  { comment: '# 2. 初始化 Gateway', command: 'openclaw gateway init' },
-  { comment: '# 3. 启动服务', command: 'openclaw gateway start' },
-]
 </script>
 
 <template>
   <section class="install-section" id="install">
-    <h2 class="section-title reveal">
-      <span class="gradient-text">快速开始</span>
-    </h2>
-    <p class="section-desc reveal reveal-delay-1">
-      零基础也能轻松上手，最快 5 分钟完成安装配置
-    </p>
-
-    <!-- Quick commands for advanced users -->
-    <div class="quick-start terminal glass reveal reveal-delay-2">
-      <div class="terminal-header">
-        <div class="terminal-dot red"></div>
-        <div class="terminal-dot yellow"></div>
-        <div class="terminal-dot green"></div>
-        <span class="terminal-title">Terminal</span>
-      </div>
-      <div class="terminal-body">
-        <template v-for="item in commands" :key="item.command">
-          <div class="cmd-line">
-            <span class="cmd-comment">{{ item.comment }}</span>
-            <div class="cmd-command" @click="copyCommand(item.command)">
-              <span class="cmd-text">{{ item.command }}</span>
-              <span class="copy-hint">📋 点击复制</span>
-            </div>
-          </div>
-        </template>
-      </div>
-    </div>
-
-    <!-- Step by step guide -->
+    <h2 class="section-title">🚀 快速开始</h2>
+    <p class="section-subtitle">4 步轻松搭建你的 AI 助手</p>
+    
     <div class="steps-container">
       <div 
-        v-for="(step, index) in steps" 
-        :key="step.number"
-        class="step-card reveal"
-        :class="[`reveal-delay-${index + 1}`, { active: activeStep === step.number }]"
-        @click="activeStep = step.number"
+        v-for="step in steps" 
+        :key="step.id"
+        class="step-wrapper"
+        :class="{ 
+          'is-active': expandedStep === step.id,
+          'is-collapsed': expandedStep !== null && expandedStep !== step.id
+        }"
       >
-        <div class="step-number">{{ step.number }}</div>
-        <div class="step-content">
-          <h3 class="step-title">{{ step.title }}</h3>
-          <p class="step-desc">{{ step.desc }}</p>
-          <div class="step-details" v-show="activeStep === step.number">
-            <ul>
-              <li v-for="detail in step.details" :key="detail">
-                {{ detail }}
-              </li>
-            </ul>
+        <div 
+          class="step-card"
+          :class="{ expanded: expandedStep === step.id }"
+          @click="toggleStep(step.id)"
+        >
+          <div class="step-number">{{ step.id }}</div>
+          <div class="step-header-content">
+            <h3 class="step-title">{{ step.title }}</h3>
+            <p class="step-desc">{{ step.desc }}</p>
           </div>
+          <div class="step-indicator">
+            <span v-if="expandedStep === step.id" class="indicator-icon">−</span>
+            <span v-else class="indicator-icon">+</span>
+          </div>
+          
+          <!-- 展开详情 -->
+          <Transition name="slide">
+            <div v-if="expandedStep === step.id" class="step-details" @click.stop>
+              <div class="command-block" @click="copyCommand(step.command)">
+                <code>{{ step.command }}</code>
+                <span class="copy-hint">点击复制</span>
+              </div>
+              
+              <ul class="details-list">
+                <li v-for="(detail, idx) in step.details" :key="idx">
+                  {{ detail }}
+                </li>
+              </ul>
+              
+              <a 
+                v-if="step.link" 
+                :href="step.link" 
+                target="_blank"
+                class="learn-more-link"
+              >
+                查看官方文档 →
+              </a>
+            </div>
+          </Transition>
         </div>
       </div>
-    </div>
-
-    <!-- Prerequisites -->
-    <div class="prerequisites glass reveal reveal-delay-5">
-      <h3 class="prereq-title">📦 准备工作</h3>
-      <div class="prereq-grid">
-        <div class="prereq-item">
-          <span class="prereq-icon">🟢</span>
-          <div>
-            <strong>Node.js</strong>
-            <p>版本 18.x 或更高</p>
-          </div>
-        </div>
-        <div class="prereq-item">
-          <span class="prereq-icon">📦</span>
-          <div>
-            <strong>npm</strong>
-            <p>随 Node.js 一起安装</p>
-          </div>
-        </div>
-        <div class="prereq-item">
-          <span class="prereq-icon">🌐</span>
-          <div>
-            <strong>网络</strong>
-            <p>需要访问 npm 仓库</p>
-          </div>
-        </div>
-        <div class="prereq-item">
-          <span class="prereq-icon">💻</span>
-          <div>
-            <strong>终端</strong>
-            <p>PowerShell / CMD / Terminal</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Help section -->
-    <div class="help-section reveal reveal-delay-5">
-      <p>遇到问题？查看 <a href="https://github.com" target="_blank">官方文档</a> 或加入社区寻求帮助</p>
     </div>
   </section>
 </template>
@@ -178,96 +140,159 @@ const commands = [
 .install-section {
   padding: 6rem 2rem;
   background: var(--bg-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+.install-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
 }
 
 .section-title {
   text-align: center;
   font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.section-desc {
+.section-subtitle {
   text-align: center;
   font-size: 1.1rem;
   color: var(--text-muted);
   margin-bottom: 3rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-/* Quick start terminal */
-.quick-start {
-  max-width: 700px;
-  margin: 0 auto 3rem;
+.steps-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.step-wrapper {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-wrapper.is-collapsed {
+  opacity: 0.5;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+.step-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.step-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
   box-shadow: var(--shadow);
 }
 
-.terminal-header {
-  padding: 0.75rem 1rem;
-  background: var(--bg-elevated);
+.step-card.expanded {
+  border-color: var(--primary);
+  box-shadow: 0 12px 40px -12px rgba(99, 102, 241, 0.4);
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: white;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.terminal-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.terminal-dot.red { background: #ff5f56; }
-.terminal-dot.yellow { background: #ffbd2e; }
-.terminal-dot.green { background: #27c93f; }
-
-.terminal-title {
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.terminal-body {
-  padding: 1.5rem;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-  font-size: 0.95rem;
-  line-height: 1.8;
-  background: var(--bg);
-}
-
-.cmd-line {
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
   margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
-.cmd-comment {
-  display: block;
-  color: var(--accent);
-  margin-bottom: 0.25rem;
+.step-header-content {
+  flex: 1;
 }
 
-.cmd-command {
+.step-title {
+  font-size: 1.1rem;
+  font-weight: 600;
   color: var(--text);
-  cursor: pointer;
-  transition: all 0.2s ease;
+  margin-bottom: 0.5rem;
+}
+
+.step-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.step-indicator {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.step-card:hover .step-indicator {
+  color: var(--primary);
+}
+
+/* 展开详情 */
+.step-details {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.command-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  background: var(--bg-subtle);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1rem;
 }
 
-.cmd-command:hover {
-  background: var(--bg-elevated);
+.command-block:hover {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.1);
 }
 
-.cmd-command:hover .cmd-text {
-  color: var(--primary);
+.command-block code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: var(--accent);
+  font-size: 0.9rem;
 }
 
 .copy-hint {
@@ -277,159 +302,81 @@ const commands = [
   transition: opacity 0.2s;
 }
 
-.cmd-command:hover .copy-hint {
+.command-block:hover .copy-hint {
   opacity: 1;
 }
 
-/* Steps */
-.steps-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto 3rem;
-}
-
-.step-card {
-  display: flex;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.step-card:hover,
-.step-card.active {
-  border-color: var(--primary);
-  transform: translateY(-4px);
-}
-
-.step-card.active {
-  box-shadow: 0 10px 40px -10px rgba(99, 102, 241, 0.3);
-}
-
-.step-number {
-  width: 40px;
-  height: 40px;
-  background: var(--gradient-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: white;
-  flex-shrink: 0;
-}
-
-.step-content {
-  flex: 1;
-}
-
-.step-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.step-desc {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-
-.step-details {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.step-details ul {
+.details-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.step-details li {
-  font-size: 0.85rem;
+.details-list li {
   color: var(--text-muted);
-  padding: 0.4rem 0;
-  padding-left: 1rem;
+  padding: 0.5rem 0;
+  padding-left: 1.25rem;
   position: relative;
+  font-size: 0.85rem;
+  line-height: 1.5;
 }
 
-.step-details li::before {
-  content: '›';
+.details-list li::before {
+  content: '▸';
   position: absolute;
   left: 0;
   color: var(--primary);
-  font-weight: bold;
-}
-
-/* Prerequisites */
-.prerequisites {
-  max-width: 900px;
-  margin: 0 auto 2rem;
-  padding: 2rem;
-  border-radius: var(--radius);
-}
-
-.prereq-title {
-  text-align: center;
-  font-size: 1.25rem;
-  margin-bottom: 1.5rem;
-}
-
-.prereq-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem;
-}
-
-.prereq-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--bg-subtle);
-  border-radius: 0.75rem;
-}
-
-.prereq-icon {
-  font-size: 1.5rem;
-}
-
-.prereq-item strong {
-  display: block;
-  font-size: 0.95rem;
-}
-
-.prereq-item p {
   font-size: 0.8rem;
-  color: var(--text-muted);
-  margin: 0;
 }
 
-/* Help section */
-.help-section {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.help-section a {
-  color: var(--primary);
+.learn-more-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--accent);
+  font-size: 0.85rem;
   text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-.help-section a:hover {
-  text-decoration: underline;
+.learn-more-link:hover {
+  color: var(--primary);
+  transform: translateX(3px);
 }
 
-@media (max-width: 768px) {
+/* 展开动画 */
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  max-height: 0;
+  transform: translateY(-10px);
+}
+
+.slide-enter-to,
+.slide-leave-from {
+  opacity: 1;
+  max-height: 400px;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  .steps-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
   .steps-container {
     grid-template-columns: 1fr;
+  }
+  
+  .section-title {
+    font-size: 2rem;
   }
 }
 </style>

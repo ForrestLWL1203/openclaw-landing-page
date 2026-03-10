@@ -71,6 +71,22 @@ const toggleStep = (id: number) => {
   expandedStep.value = expandedStep.value === id ? null : id
 }
 
+// 计算每个步骤的偏移量
+const getStepOffset = (stepId: number) => {
+  if (expandedStep.value === null) return 0
+  if (expandedStep.value >= stepId) return 0
+  
+  // 展开的步骤会让后面的步骤右移
+  const expandedIndex = steps.findIndex(s => s.id === expandedStep.value)
+  const currentIndex = steps.findIndex(s => s.id === stepId)
+  
+  if (currentIndex > expandedIndex) {
+    // 返回详情区域的宽度 + gap
+    return 380 
+  }
+  return 0
+}
+
 const copyCommand = (cmd: string) => {
   navigator.clipboard.writeText(cmd)
 }
@@ -86,9 +102,10 @@ const copyCommand = (cmd: string) => {
         v-for="step in steps" 
         :key="step.id"
         class="step-wrapper"
-        :class="{ 
-          'is-active': expandedStep === step.id,
-          'is-collapsed': expandedStep !== null && expandedStep !== step.id
+        :class="{ 'is-expanded': expandedStep === step.id }"
+        :style="{ 
+          transform: `translateX(${getStepOffset(step.id)}px)`,
+          transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
         }"
       >
         <div 
@@ -105,10 +122,13 @@ const copyCommand = (cmd: string) => {
             <span v-if="expandedStep === step.id" class="indicator-icon">−</span>
             <span v-else class="indicator-icon">+</span>
           </div>
-          
-          <!-- 展开详情 -->
-          <Transition name="slide">
-            <div v-if="expandedStep === step.id" class="step-details" @click.stop>
+        </div>
+        
+        <!-- 展开详情 - 浮动在右侧 -->
+        <Transition name="slide">
+          <div v-if="expandedStep === step.id" class="step-details">
+            <div class="details-arrow"></div>
+            <div class="details-content">
               <div class="command-block" @click="copyCommand(step.command)">
                 <code>{{ step.command }}</code>
                 <span class="copy-hint">点击复制</span>
@@ -129,8 +149,8 @@ const copyCommand = (cmd: string) => {
                 查看官方文档 →
               </a>
             </div>
-          </Transition>
-        </div>
+          </div>
+        </Transition>
       </div>
     </div>
   </section>
@@ -169,25 +189,23 @@ const copyCommand = (cmd: string) => {
   text-align: center;
   font-size: 1.1rem;
   color: var(--text-muted);
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
 }
 
 .steps-container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-left: 2rem;
 }
 
 .step-wrapper {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.step-wrapper.is-collapsed {
-  opacity: 0.5;
-  transform: scale(0.95);
-  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  flex-shrink: 0;
 }
 
 .step-card {
@@ -198,7 +216,7 @@ const copyCommand = (cmd: string) => {
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  height: 100%;
+  min-width: 200px;
   display: flex;
   flex-direction: column;
 }
@@ -264,11 +282,48 @@ const copyCommand = (cmd: string) => {
   color: var(--primary);
 }
 
-/* 展开详情 */
+/* 展开详情 - 浮动在卡片右侧 */
 .step-details {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: 1rem;
+  width: 360px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 20px 60px -20px rgba(99, 102, 241, 0.5);
+  z-index: 10;
+}
+
+.details-arrow {
+  position: absolute;
+  left: -8px;
+  top: 24px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid var(--primary);
+}
+
+.details-arrow::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: -8px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid var(--bg-elevated);
+}
+
+.details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .command-block {
@@ -281,7 +336,6 @@ const copyCommand = (cmd: string) => {
   align-items: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 1rem;
 }
 
 .command-block:hover {
@@ -331,7 +385,6 @@ const copyCommand = (cmd: string) => {
 
 .learn-more-link {
   display: inline-block;
-  margin-top: 1rem;
   color: var(--accent);
   font-size: 0.85rem;
   text-decoration: none;
@@ -347,34 +400,51 @@ const copyCommand = (cmd: string) => {
 .slide-enter-active,
 .slide-leave-active {
   transition: all 0.3s ease;
-  overflow: hidden;
 }
 
 .slide-enter-from,
 .slide-leave-to {
   opacity: 0;
-  max-height: 0;
-  transform: translateY(-10px);
+  transform: translateX(-20px);
 }
 
 .slide-enter-to,
 .slide-leave-from {
   opacity: 1;
-  max-height: 400px;
-  transform: translateY(0);
+  transform: translateX(0);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   .steps-container {
-    grid-template-columns: repeat(2, 1fr);
+    flex-direction: column;
+    align-items: stretch;
+    padding-left: 0;
+  }
+  
+  .step-wrapper {
+    width: 100%;
+  }
+  
+  .step-card {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .step-details {
+    position: relative;
+    left: auto;
+    top: auto;
+    margin-left: 0;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  
+  .details-arrow {
+    display: none;
   }
 }
 
 @media (max-width: 600px) {
-  .steps-container {
-    grid-template-columns: 1fr;
-  }
-  
   .section-title {
     font-size: 2rem;
   }

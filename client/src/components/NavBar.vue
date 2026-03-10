@@ -1,37 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-
-const isDropdownOpen = ref(false)
-const isScrolled = ref(false)
-
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 50
-}
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
-
 const navItems = [
   { label: '首页', href: '#intro' },
-  { label: '特色功能', href: '#features' },
-  { label: '使用场景', href: '#usecases' },
-  { label: '快速开始', href: '#install' },
-]
-
-const dropdownItems = [
-  { label: '文档', href: '#' },
-  { label: 'GitHub', href: 'https://github.com', target: '_blank' },
-  { label: '关于团队', href: '#team' },
+  { label: '功能', href: '#features' },
+  { label: '安装', href: '#install' },
 ]
 </script>
 
 <template>
-  <nav class="navbar" :class="{ scrolled: isScrolled }">
+  <nav class="navbar">
     <div class="nav-container">
       <a href="#" class="logo">
         🦞 OpenClaw
@@ -46,26 +22,6 @@ const dropdownItems = [
         >
           {{ item.label }}
         </a>
-        
-        <div 
-          class="dropdown"
-          @mouseenter="isDropdownOpen = true"
-          @mouseleave="isDropdownOpen = false"
-        >
-          <button class="dropbtn">
-            更多 ▾
-          </button>
-          <div class="dropdown-content" :class="{ open: isDropdownOpen }">
-            <a 
-              v-for="item in dropdownItems" 
-              :key="item.label"
-              :href="item.href"
-              :target="item.target"
-            >
-              {{ item.label }}
-            </a>
-          </div>
-        </div>
       </div>
     </div>
   </nav>
@@ -79,17 +35,22 @@ const dropdownItems = [
   right: 0;
   z-index: 100;
   padding: 1rem 2rem;
-  background: rgba(10, 10, 15, 0.8);
+  background: rgba(10, 10, 15, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid transparent;
-  transition: all 0.3s ease;
+  border-bottom: 1px solid var(--border);
+  animation: slideDown 0.5s ease-out;
 }
 
-.navbar.scrolled {
-  padding: 0.75rem 2rem;
-  background: rgba(10, 10, 15, 0.9);
-  border-bottom-color: var(--border);
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .nav-container {
@@ -103,24 +64,22 @@ const dropdownItems = [
 .logo {
   font-size: 1.25rem;
   font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .logo:hover {
+  color: var(--primary);
   transform: scale(1.05);
 }
 
 .nav-links {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 
 .nav-link {
@@ -128,86 +87,32 @@ const dropdownItems = [
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius);
-  transition: all 0.2s ease;
+  padding: 0.5rem 1.25rem;
+  border-radius: 2rem;
+  transition: all 0.3s ease;
   position: relative;
+  overflow: hidden;
 }
 
-.nav-link::after {
+.nav-link::before {
   content: '';
   position: absolute;
-  bottom: 0.25rem;
+  bottom: 0;
   left: 50%;
   width: 0;
   height: 2px;
-  background: var(--gradient-primary);
+  background: var(--primary);
   transition: all 0.3s ease;
   transform: translateX(-50%);
-  border-radius: 1px;
 }
 
 .nav-link:hover {
   color: var(--text);
+  background: rgba(99, 102, 241, 0.1);
 }
 
-.nav-link:hover::after {
-  width: calc(100% - 2rem);
-}
-
-.dropdown {
-  position: relative;
-}
-
-.dropbtn {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: color 0.2s;
-  font-family: var(--font-sans);
-  border-radius: var(--radius);
-}
-
-.dropbtn:hover {
-  color: var(--text);
-  background: var(--bg-subtle);
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  min-width: 160px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  z-index: 200;
-  overflow: hidden;
-  animation: fadeIn 0.2s ease;
-}
-
-.dropdown-content.open {
-  display: block;
-}
-
-.dropdown-content a {
-  display: block;
-  padding: 0.75rem 1rem;
-  color: var(--text);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: all 0.2s ease;
-}
-
-.dropdown-content a:hover {
-  background: var(--bg-subtle);
-  color: var(--primary);
-  padding-left: 1.25rem;
+.nav-link:hover::before {
+  width: 60%;
 }
 
 @media (max-width: 768px) {

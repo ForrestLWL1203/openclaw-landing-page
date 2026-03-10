@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import NavBar from './components/NavBar.vue'
+import InstallSection from './components/InstallSection.vue'
 import HeroSection from './components/HeroSection.vue'
 import FeaturesSection from './components/FeaturesSection.vue'
-import InstallSection from './components/InstallSection.vue'
 import FooterSection from './components/FooterSection.vue'
 </script>
 
@@ -10,8 +10,8 @@ import FooterSection from './components/FooterSection.vue'
   <div class="app">
     <NavBar />
     <main>
-      <HeroSection />
       <InstallSection />
+      <HeroSection />
       <FeaturesSection />
     </main>
     <FooterSection />

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 const navItems = [
-  { label: '首页', href: '#intro' },
+  { label: '快速开始', href: '#install' },
   { label: '功能', href: '#features' },
-  { label: '安装', href: '#install' },
 ]
 </script>
 
