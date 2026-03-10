@@ -37,15 +37,8 @@ const features = [
               <p>{{ feature.desc }}</p>
             </div>
           </div>
-          <button class="collapse-btn" @click="toggleExpand">
-            收起详情 △
-          </button>
         </div>
       </Transition>
-      
-      <button v-if="!isExpanded" class="expand-hint" @click="toggleExpand">
-        了解更多 ↓
-      </button>
     </div>
   </section>
 </template>
