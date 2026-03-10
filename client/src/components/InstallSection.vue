@@ -82,9 +82,8 @@ const copyCommand = (cmd: string) => {
     <p class="section-subtitle">4 步轻松搭建你的 AI 助手</p>
     
     <div class="steps-container">
-      <!-- 步骤1-3 -->
       <div 
-        v-for="step in steps.slice(0, 3)" 
+        v-for="step in steps" 
         :key="step.id"
         class="step-wrapper"
         :class="{ 
@@ -117,48 +116,6 @@ const copyCommand = (cmd: string) => {
                 </li>
               </ul>
               <a v-if="step.link" :href="step.link" target="_blank" class="learn-more-link">
-                查看官方文档 →
-              </a>
-            </div>
-        </div>
-      </div>
-      
-      <!-- 隐藏占位符 - 展开时占第4列位置 -->
-      <div v-if="expandedStep !== null && expandedStep <= 3" class="step-placeholder"></div>
-      
-      <!-- 步骤4 -->
-      <div 
-        class="step-wrapper"
-        :class="{ 
-          'is-active': expandedStep === 4,
-          'is-collapsed': expandedStep !== null && expandedStep !== 4
-        }"
-      >
-        <div 
-          class="step-card"
-          :class="{ expanded: expandedStep === 4 }"
-          @click="toggleStep(4)"
-        >
-          <div class="step-number">4</div>
-          <div class="step-header-content">
-            <h3 class="step-title">{{ steps[3].title }}</h3>
-            <p class="step-desc">{{ steps[3].desc }}</p>
-          </div>
-          <div class="step-indicator">
-            <span v-if="expandedStep === 4" class="indicator-icon">−</span>
-            <span v-else class="indicator-icon">+</span>
-          </div>
-          <div v-show="expandedStep === 4" class="step-details" @click.stop>
-              <div class="command-block" @click="copyCommand(steps[3].command)">
-                <code>{{ steps[3].command }}</code>
-                <span class="copy-hint">点击复制</span>
-              </div>
-              <ul class="details-list">
-                <li v-for="(detail, idx) in steps[3].details" :key="idx">
-                  {{ detail }}
-                </li>
-              </ul>
-              <a v-if="steps[3].link" :href="steps[3].link" target="_blank" class="learn-more-link">
                 查看官方文档 →
               </a>
             </div>
@@ -205,29 +162,49 @@ const copyCommand = (cmd: string) => {
 }
 
 .steps-container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.5rem;
-  padding: 1rem 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  position: relative;
 }
 
 .step-wrapper {
-  transition: all 0.4s ease;
+  flex: 1;
+  max-width: 260px;
+  position: relative;
 }
 
 .step-wrapper.is-active {
-  grid-column: span 2;
+  z-index: 10;
+}
+
+.step-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  min-height: 180px;
+  height: 100%;
+}
+
+.step-wrapper.is-active .step-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 450px;
+  z-index: 100;
+  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.3);
 }
 
 .step-wrapper.is-collapsed {
-  opacity: 0.5;
-}
-
-/* 隐藏的占位列 */
-.step-placeholder {
-  visibility: hidden;
+  opacity: 0.4;
 }
 
 .step-card {
