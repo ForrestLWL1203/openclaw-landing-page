@@ -202,13 +202,13 @@ const copyCommand = (cmd: string) => {
   border-radius: var(--radius);
   padding: 1.5rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   height: auto;
   min-height: 180px;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  overflow: hidden;
 }
 
 .step-card:hover {
