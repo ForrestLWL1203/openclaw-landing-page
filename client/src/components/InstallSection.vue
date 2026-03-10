@@ -178,7 +178,7 @@ const copyCommand = (cmd: string) => {
 }
 
 .step-wrapper.is-active {
-  z-index: 10;
+  z-index: 1000;
 }
 
 .step-card {
@@ -197,10 +197,10 @@ const copyCommand = (cmd: string) => {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
   width: 450px;
-  z-index: 100;
-  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  box-shadow: 0 25px 80px -15px rgba(0, 0, 0, 0.4);
+  background: var(--bg-elevated);
 }
 
 .step-wrapper.is-collapsed {
