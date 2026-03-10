@@ -82,8 +82,9 @@ const copyCommand = (cmd: string) => {
     <p class="section-subtitle">4 步轻松搭建你的 AI 助手</p>
     
     <div class="steps-container">
+      <!-- 步骤1-3 -->
       <div 
-        v-for="step in steps" 
+        v-for="step in steps.slice(0, 3)" 
         :key="step.id"
         class="step-wrapper"
         :class="{ 
@@ -105,33 +106,64 @@ const copyCommand = (cmd: string) => {
             <span v-if="expandedStep === step.id" class="indicator-icon">−</span>
             <span v-else class="indicator-icon">+</span>
           </div>
-          
-          <!-- 展开详情 -->
           <div v-show="expandedStep === step.id" class="step-details" @click.stop>
               <div class="command-block" @click="copyCommand(step.command)">
                 <code>{{ step.command }}</code>
                 <span class="copy-hint">点击复制</span>
               </div>
-              
               <ul class="details-list">
                 <li v-for="(detail, idx) in step.details" :key="idx">
                   {{ detail }}
                 </li>
               </ul>
-              
-              <a 
-                v-if="step.link" 
-                :href="step.link" 
-                target="_blank"
-                class="learn-more-link"
-              >
+              <a v-if="step.link" :href="step.link" target="_blank" class="learn-more-link">
                 查看官方文档 →
               </a>
             </div>
         </div>
       </div>
-      <!-- 隐藏占位符 - 展开时保持第4步在第一行 -->
-      <div v-if="expandedStep !== null" class="step-placeholder"></div>
+      
+      <!-- 隐藏占位符 - 展开时占第4列位置 -->
+      <div v-if="expandedStep !== null && expandedStep <= 3" class="step-placeholder"></div>
+      
+      <!-- 步骤4 -->
+      <div 
+        class="step-wrapper"
+        :class="{ 
+          'is-active': expandedStep === 4,
+          'is-collapsed': expandedStep !== null && expandedStep !== 4
+        }"
+      >
+        <div 
+          class="step-card"
+          :class="{ expanded: expandedStep === 4 }"
+          @click="toggleStep(4)"
+        >
+          <div class="step-number">4</div>
+          <div class="step-header-content">
+            <h3 class="step-title">{{ steps[3].title }}</h3>
+            <p class="step-desc">{{ steps[3].desc }}</p>
+          </div>
+          <div class="step-indicator">
+            <span v-if="expandedStep === 4" class="indicator-icon">−</span>
+            <span v-else class="indicator-icon">+</span>
+          </div>
+          <div v-show="expandedStep === 4" class="step-details" @click.stop>
+              <div class="command-block" @click="copyCommand(steps[3].command)">
+                <code>{{ steps[3].command }}</code>
+                <span class="copy-hint">点击复制</span>
+              </div>
+              <ul class="details-list">
+                <li v-for="(detail, idx) in steps[3].details" :key="idx">
+                  {{ detail }}
+                </li>
+              </ul>
+              <a v-if="steps[3].link" :href="steps[3].link" target="_blank" class="learn-more-link">
+                查看官方文档 →
+              </a>
+            </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>
