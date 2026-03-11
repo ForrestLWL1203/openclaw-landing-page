@@ -26,3 +26,9 @@ npm-debug.log*
 # Temp folders
 openclaw-docs-temp/
 skills/
+.clawhub/
+.openclaw/
+
+# Exclude all md files except these
+*.md
+!README.md
