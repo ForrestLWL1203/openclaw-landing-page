@@ -3,6 +3,8 @@ node_modules/
 
 # Build output
 dist/
+client/dist/
+docs/
 
 # IDE
 .vscode/
@@ -20,3 +22,7 @@ npm-debug.log*
 .env
 .env.local
 .env.*.local
+
+# Temp folders
+openclaw-docs-temp/
+skills/
