@@ -1,8 +1,4 @@
 <script setup lang="ts">
-const navItems = [
-  { label: '快速开始', href: '#install' },
-  { label: '功能', href: '#features' },
-]
 </script>
 
 <template>
@@ -18,17 +14,6 @@ const navItems = [
         </svg>
         <span>OpenClaw</span>
       </a>
-      
-      <div class="nav-links">
-        <a 
-          v-for="item in navItems" 
-          :key="item.label"
-          :href="item.href" 
-          class="nav-link"
-        >
-          {{ item.label }}
-        </a>
-      </div>
     </div>
   </nav>
 </template>
@@ -80,49 +65,5 @@ const navItems = [
 
 .logo:hover .logo-icon {
   transform: rotate(-10deg) scale(1.1);
-}
-
-.nav-links {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.nav-link {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.5rem 1.25rem;
-  border-radius: 2rem;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.nav-link::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-}
-
-.nav-link:hover {
-  color: var(--text);
-  background: rgba(37, 99, 235, 0.08);
-}
-
-.nav-link:hover::before {
-  width: 60%;
-}
-
-@media (max-width: 768px) {
-  .nav-links {
-    display: none;
-  }
 }
 </style>
