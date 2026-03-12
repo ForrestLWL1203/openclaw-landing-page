@@ -1,30 +1,35 @@
 :root {
-  /* Modern Gradient Theme */
-  --bg: #0a0a0f;
-  --bg-subtle: #12121a;
-  --bg-elevated: #1a1a24;
-  --text: #f0f0f5;
-  --text-muted: #8b8b9e;
-  --primary: #6366f1;
-  --primary-hover: #818cf8;
-  --accent: #22d3ee;
-  --accent-secondary: #f472b6;
-  --border: rgba(255, 255, 255, 0.08);
+  /* Light Theme - Vibrant & Block-based */
+  --bg: #F8FAFC;
+  --bg-subtle: #F1F5F9;
+  --bg-elevated: #FFFFFF;
+  --text: #1E293B;
+  --text-muted: #64748B;
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --accent: #F97316;
+  --accent-secondary: #06B6D4;
+  --border: #E2E8F0;
   --radius: 1rem;
-  --shadow: 0 8px 32px -8px rgba(99, 102, 241, 0.3);
+  --shadow: 0 8px 32px -8px rgba(37, 99, 235, 0.15);
+  --shadow-hover: 0 20px 40px -12px rgba(37, 99, 235, 0.25);
   
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Outfit', 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
-  /* Gradient text helper */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #22d3ee 50%, #f472b6 100%);
-  --gradient-bg: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                 radial-gradient(ellipse at bottom right, rgba(34, 211, 238, 0.1) 0%, transparent 50%);
+  /* Gradient helpers */
+  --gradient-primary: linear-gradient(135deg, #2563EB 0%, #06B6D4 50%, #F97316 100%);
+  --gradient-bg: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);
+  --gradient-card: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -35,14 +40,30 @@ body {
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Glassmorphism - Dark mode optimized */
+/* Glassmorphism - Light mode */
 .glass {
-  background: rgba(26, 26, 36, 0.6);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
+}
+
+/* Block styling - geometric cards */
+.block {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.block:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-4px);
 }
 
 /* Animations */
@@ -82,6 +103,17 @@ body {
   100% { transform: translateX(100%); }
 }
 
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Scroll reveal animation */
 .reveal {
   opacity: 0;
@@ -98,6 +130,8 @@ body {
 .reveal-delay-2 { transition-delay: 0.2s; }
 .reveal-delay-3 { transition-delay: 0.3s; }
 .reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
 
 /* Gradient text */
 .gradient-text {
@@ -114,4 +148,15 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+}
+
+/* Section spacing */
+.section {
+  padding: 5rem 2rem;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 3rem 1.5rem;
+  }
 }
