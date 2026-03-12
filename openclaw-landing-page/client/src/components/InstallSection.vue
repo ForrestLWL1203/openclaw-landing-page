@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useScrollReveal } from '../composables/useScrollReveal'
 
 interface Step {
   id: number
@@ -10,24 +11,33 @@ interface Step {
   link?: string
 }
 
+// SVG Icons for steps
+const stepIcons: Record<string, string> = {
+  git: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg>`,
+  node: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>`,
+  install: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`,
+  config: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+  agent: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+}
+
 const steps: Step[] = [
   {
     id: 1,
-    title: '安装 CLI',
-    desc: '全局安装 OpenClaw 命令行工具',
-    command: 'npm install -g openclaw@latest',
+    title: '安装 Git',
+    desc: '版本控制工具，必备开发环境',
+    command: 'git --version',
     details: [
-      '前置要求：Node.js >= 18，推荐使用 Node.js 22+',
-      'Windows 用户推荐使用 WSL2（Ubuntu）运行',
-      'macOS/Linux 用户可直接安装',
-      '安装完成后验证：openclaw --version',
+      'Windows: 从官网 https://git-scm.com 下载安装',
+      'macOS: 运行 xcode-select --install 或安装 Homebrew',
+      'Linux: 使用 sudo apt-get install git (Ubuntu/Debian)',
+      '安装后验证：git --version',
     ],
-    link: 'https://docs.openclaw.ai/zh-CN/start/quickstart'
+    link: 'https://git-scm.com/'
   },
   {
     id: 2,
     title: '安装 Node.js',
-    desc: '安装 Node.js 环境（如果没有）',
+    desc: 'JavaScript 运行时环境',
     command: 'node -v',
     details: [
       '推荐使用 nvm 管理 Node.js 版本',
@@ -39,6 +49,19 @@ const steps: Step[] = [
   },
   {
     id: 3,
+    title: '安装 OpenClaw CLI',
+    desc: '全局安装 OpenClaw 命令行工具',
+    command: 'npm install -g openclaw@latest',
+    details: [
+      '前置要求：Node.js >= 18，推荐使用 Node.js 22+',
+      'Windows 用户推荐使用 WSL2（Ubuntu）运行',
+      'macOS/Linux 用户可直接安装',
+      '安装完成后验证：openclaw --version',
+    ],
+    link: 'https://docs.openclaw.ai/zh-CN/start/quickstart'
+  },
+  {
+    id: 4,
     title: '初始化 Gateway',
     desc: '配置本地 Gateway 服务',
     command: 'openclaw onboard --install-daemon',
@@ -51,7 +74,7 @@ const steps: Step[] = [
     link: 'https://docs.openclaw.ai/zh-CN/start/wizard'
   },
   {
-    id: 4,
+    id: 5,
     title: '配置 Agent',
     desc: '配置 AI 助手连接',
     command: 'openclaw gateway start',
@@ -66,6 +89,7 @@ const steps: Step[] = [
 ]
 
 const expandedStep = ref<number | null>(null)
+const sectionRef = ref<HTMLElement | null>(null)
 
 const toggleStep = (id: number) => {
   expandedStep.value = expandedStep.value === id ? null : id
@@ -76,12 +100,10 @@ const getStepOffset = (stepId: number) => {
   if (expandedStep.value === null) return 0
   if (expandedStep.value >= stepId) return 0
   
-  // 展开的步骤会让后面的步骤右移
   const expandedIndex = steps.findIndex(s => s.id === expandedStep.value)
   const currentIndex = steps.findIndex(s => s.id === stepId)
   
   if (currentIndex > expandedIndex) {
-    // 返回详情区域的宽度 + gap
     return 380 
   }
   return 0
@@ -90,16 +112,22 @@ const getStepOffset = (stepId: number) => {
 const copyCommand = (cmd: string) => {
   navigator.clipboard.writeText(cmd)
 }
+
+// Use composable for scroll reveal
+useScrollReveal(sectionRef)
 </script>
 
 <template>
-  <section class="install-section" id="install">
-    <h2 class="section-title">🚀 快速开始</h2>
-    <p class="section-subtitle">4 步轻松搭建你的 AI 助手</p>
+  <section class="install-section section" id="install" ref="sectionRef">
+    <h2 class="section-title reveal">
+      <span class="title-accent"></span>
+      快速开始
+    </h2>
+    <p class="section-subtitle reveal reveal-delay-1">5 步轻松搭建你的 AI 助手</p>
     
     <div class="steps-container">
       <div 
-        v-for="step in steps" 
+        v-for="(step, index) in steps" 
         :key="step.id"
         class="step-wrapper"
         :class="{ 'is-expanded': expandedStep === step.id }"
@@ -109,18 +137,25 @@ const copyCommand = (cmd: string) => {
         }"
       >
         <div 
-          class="step-card"
+          class="step-card block"
           :class="{ expanded: expandedStep === step.id }"
           @click="toggleStep(step.id)"
         >
-          <div class="step-number">{{ step.id }}</div>
+          <div class="step-number" :class="`step-${index + 1}`">
+            <span v-html="stepIcons[['git', 'node', 'install', 'config', 'agent'][index]]"></span>
+          </div>
           <div class="step-header-content">
             <h3 class="step-title">{{ step.title }}</h3>
             <p class="step-desc">{{ step.desc }}</p>
           </div>
           <div class="step-indicator">
-            <span v-if="expandedStep === step.id" class="indicator-icon">−</span>
-            <span v-else class="indicator-icon">+</span>
+            <svg v-if="expandedStep === step.id" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="indicator-icon">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="indicator-icon">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
           </div>
         </div>
         
@@ -146,7 +181,12 @@ const copyCommand = (cmd: string) => {
                 target="_blank"
                 class="learn-more-link"
               >
-                查看官方文档 →
+                查看官方文档
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="link-icon">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
               </a>
             </div>
           </div>
@@ -158,10 +198,12 @@ const copyCommand = (cmd: string) => {
 
 <style scoped>
 .install-section {
-  padding: 6rem 2rem;
-  background: var(--bg-subtle);
+  padding: 4rem 2rem;
+  background: var(--bg);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  min-height: auto;
+  z-index: 50;
 }
 
 .install-section::before {
@@ -179,26 +221,35 @@ const copyCommand = (cmd: string) => {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.title-accent {
+  width: 48px;
+  height: 4px;
+  background: var(--gradient-primary);
+  border-radius: 2px;
 }
 
 .section-subtitle {
   text-align: center;
   font-size: 1.1rem;
   color: var(--text-muted);
-  margin-bottom: 4rem;
+  margin-bottom: 2.5rem;
 }
 
 .steps-container {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
+  justify-content: center;
   gap: 1rem;
-  padding-left: 2rem;
+  flex-wrap: wrap;
 }
 
 .step-wrapper {
@@ -210,41 +261,42 @@ const copyCommand = (cmd: string) => {
 
 .step-card {
   background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
+  padding: 1.25rem;
   cursor: pointer;
-  transition: all 0.3s ease;
   position: relative;
-  min-width: 200px;
+  min-width: 220px;
+  min-height: 120px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.step-card:hover {
-  border-color: var(--primary);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow);
-}
-
-.step-card.expanded {
-  border-color: var(--primary);
-  box-shadow: 0 12px 40px -12px rgba(99, 102, 241, 0.4);
+  z-index: 55;
 }
 
 .step-number {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1.1rem;
   margin-bottom: 1rem;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
+}
+
+.step-number :deep(svg) {
+  width: 22px;
+  height: 22px;
+}
+
+.step-1 { background: rgba(249, 115, 22, 0.1); color: var(--accent); }
+.step-2 { background: rgba(6, 182, 212, 0.1); color: #06B6D4; }
+.step-3 { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+.step-4 { background: rgba(249, 115, 22, 0.1); color: var(--accent); }
+.step-5 { background: rgba(37, 99, 235, 0.1); color: var(--primary); }
+
+.step-card.expanded .step-number {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .step-header-content {
@@ -274,12 +326,16 @@ const copyCommand = (cmd: string) => {
   align-items: center;
   justify-content: center;
   color: var(--text-muted);
-  font-size: 1.2rem;
   transition: all 0.3s ease;
 }
 
 .step-card:hover .step-indicator {
   color: var(--primary);
+}
+
+.indicator-icon {
+  width: 18px;
+  height: 18px;
 }
 
 /* 展开详情 - 浮动在卡片右侧 */
@@ -293,8 +349,8 @@ const copyCommand = (cmd: string) => {
   border: 1px solid var(--primary);
   border-radius: var(--radius);
   padding: 1.5rem;
-  box-shadow: 0 20px 60px -20px rgba(99, 102, 241, 0.5);
-  z-index: 10;
+  box-shadow: 0 20px 60px -20px rgba(37, 99, 235, 0.3);
+  z-index: 60;
 }
 
 .details-arrow {
@@ -327,7 +383,7 @@ const copyCommand = (cmd: string) => {
 }
 
 .command-block {
-  background: var(--bg);
+  background: var(--bg-subtle);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 1rem;
@@ -340,12 +396,12 @@ const copyCommand = (cmd: string) => {
 
 .command-block:hover {
   border-color: var(--primary);
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(37, 99, 235, 0.05);
 }
 
 .command-block code {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  color: var(--accent);
+  color: var(--primary);
   font-size: 0.9rem;
 }
 
@@ -376,24 +432,36 @@ const copyCommand = (cmd: string) => {
 }
 
 .details-list li::before {
-  content: '▸';
+  content: '';
   position: absolute;
   left: 0;
-  color: var(--primary);
-  font-size: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
 }
 
 .learn-more-link {
-  display: inline-block;
-  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary);
   font-size: 0.85rem;
   text-decoration: none;
+  font-weight: 500;
   transition: all 0.2s ease;
 }
 
 .learn-more-link:hover {
-  color: var(--primary);
+  color: var(--accent);
   transform: translateX(3px);
+}
+
+.link-icon {
+  width: 14px;
+  height: 14px;
 }
 
 /* 展开动画 */

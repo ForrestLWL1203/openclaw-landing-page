@@ -9,7 +9,14 @@ const navItems = [
   <nav class="navbar">
     <div class="nav-container">
       <a href="#" class="logo">
-        🦞 OpenClaw
+        <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="14" fill="#2563EB"/>
+          <path d="M10 12C10 12 14 8 16 8C18 8 22 12 22 12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="14" r="2" fill="white"/>
+          <circle cx="20" cy="14" r="2" fill="white"/>
+          <path d="M13 20C13 20 14 22 16 22C18 22 19 20 19 20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>OpenClaw</span>
       </a>
       
       <div class="nav-links">
@@ -34,22 +41,11 @@ const navItems = [
   right: 0;
   z-index: 100;
   padding: 1rem 2rem;
-  background: rgba(10, 10, 15, 0.85);
+  background: rgba(248, 250, 252, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   animation: slideDown 0.5s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .nav-container {
@@ -74,6 +70,16 @@ const navItems = [
 .logo:hover {
   color: var(--primary);
   transform: scale(1.05);
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover .logo-icon {
+  transform: rotate(-10deg) scale(1.1);
 }
 
 .nav-links {
@@ -107,7 +113,7 @@ const navItems = [
 
 .nav-link:hover {
   color: var(--text);
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(37, 99, 235, 0.08);
 }
 
 .nav-link:hover::before {
