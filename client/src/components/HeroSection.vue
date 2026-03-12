@@ -1,19 +1,97 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+
+interface Agent {
+  name: string
+  state: string
+  detail: string
+  avatar: string
+}
+
+const agents = ref<Agent[]>([])
+let pollInterval: number | null = null
+
+const fetchAgents = async () => {
+  try {
+    const res = await fetch('http://localhost:19000/agents')
+    const data = await res.json()
+    // 过滤出贾维斯和马斯克
+    agents.value = (data as Agent[])
+      .filter((a: Agent) => a.name === '贾维斯' || a.name === '马斯克')
+      .slice(0, 2)
+  } catch (e) {
+    // 静默失败
+  }
+}
 
 onMounted(() => {
+  // 立即获取
+  fetchAgents()
+  // 每 3 秒轮询
+  pollInterval = window.setInterval(fetchAgents, 3000)
+  
   // Trigger animation on mount
   setTimeout(() => {
     const heroContent = document.querySelector('.hero-content > *')
     heroContent?.classList.add('visible')
   }, 100)
 })
+
+onUnmounted(() => {
+  if (pollInterval) clearInterval(pollInterval)
+})
+
+const getStateText = (state: string) => {
+  const map: Record<string, string> = {
+    'idle': '待命',
+    'working': '工作中',
+    'sync': '同步中',
+    'alert': '报警',
+  }
+  return map[state] || state
+}
+
+const getStateClass = (state: string) => {
+  if (state === 'working') return 'state-working'
+  if (state === 'idle') return 'state-idle'
+  return ''
+}
+
+const openOffice = () => {
+  window.open('http://localhost:19000', '_blank')
+}
 </script>
 
 <template>
   <section class="hero" id="intro">
     <div class="hero-bg"></div>
     <div class="hero-content">
+      <!-- Agent 状态展示 -->
+      <div class="agents-status" v-if="agents.length > 0">
+        <div 
+          v-for="agent in agents" 
+          :key="agent.name"
+          class="agent-card"
+          :class="getStateClass(agent.state)"
+          @click="openOffice"
+          style="cursor: pointer;"
+        >
+          <div class="agent-avatar">
+            <svg viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="18" fill="#2563EB"/>
+              <ellipse cx="20" cy="23" rx="10" ry="7" fill="#F97316"/>
+              <circle cx="16" cy="19" r="2" fill="#1E293B"/>
+              <circle cx="24" cy="19" r="2" fill="#1E293B"/>
+              <path d="M17 25 Q20 27 23 25" stroke="#1E293B" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="agent-info">
+            <span class="agent-name">{{ agent.name }}</span>
+            <span class="agent-state">{{ getStateText(agent.state) }}</span>
+          </div>
+        </div>
+      </div>
+      
       <div class="crawfish-container">
         <svg class="crawfish-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="40" cy="40" r="36" fill="#2563EB" fill-opacity="0.1"/>
@@ -83,6 +161,66 @@ onMounted(() => {
 .hero-content > *:nth-child(2) { animation-delay: 0.15s; }
 .hero-content > *:nth-child(3) { animation-delay: 0.3s; }
 .hero-content > *:nth-child(4) { animation-delay: 0.45s; }
+
+/* Agent 状态卡片 */
+.agents-status {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.agent-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.agent-card.state-working {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.agent-card.state-idle {
+  border-color: var(--border);
+}
+
+.agent-avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.agent-avatar svg {
+  width: 100%;
+  height: 100%;
+}
+
+.agent-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.agent-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.agent-state {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.state-working .agent-state {
+  color: #22c55e;
+}
 
 .crawfish-container {
   width: 120px;
